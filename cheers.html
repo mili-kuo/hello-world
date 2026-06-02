@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheers!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 50px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .emoji {
+            font-size: 5em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.4em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #888;
+            font-size: 1.1em;
+            margin-bottom: 36px;
+        }
+
+        #cheers-btn {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            font-size: 1.4em;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            box-shadow: 0 6px 24px rgba(253, 160, 133, 0.5);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        #cheers-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(253, 160, 133, 0.6);
+        }
+
+        #cheers-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 14px rgba(253, 160, 133, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="emoji">🥂</span>
+        <h1>Let's Celebrate!</h1>
+        <p>Hit the button and let the party begin.</p>
+        <button id="cheers-btn">Cheers!</button>
+    </div>
+
+    <!-- canvas-confetti via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script>
+        document.getElementById('cheers-btn').addEventListener('click', function () {
+            // Fire a burst from the left edge
+            confetti({
+                particleCount: 80,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0, y: 0.65 }
+            });
+
+            // Fire a burst from the right edge
+            confetti({
+                particleCount: 80,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1, y: 0.65 }
+            });
+
+            // Fire a final shower from the top-centre
+            setTimeout(function () {
+                confetti({
+                    particleCount: 120,
+                    spread: 90,
+                    origin: { x: 0.5, y: 0 },
+                    startVelocity: 30
+                });
+            }, 200);
+        });
+    </script>
+</body>
+</html>
