@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Start Button</title>
+    <title>Disappearing Button</title>
     <style>
         body {
             display: flex;
@@ -20,15 +20,18 @@
             font-size: 18px;
             font-weight: bold;
             color: white;
-            background-color: #4CAF50;
+            background-color: #ff6b6b;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         
         button:hover {
-            background-color: #45a049;
+            background-color: #ff5252;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         
         button.hidden {
@@ -38,11 +41,10 @@
 </head>
 <body>
     <button id="startBtn">Start</button>
-    
+
     <script>
-        const button = document.getElementById('startBtn');
-        button.addEventListener('click', function() {
-            button.classList.add('hidden');
+        document.getElementById('startBtn').addEventListener('click', function() {
+            this.classList.add('hidden');
         });
     </script>
 </body>
