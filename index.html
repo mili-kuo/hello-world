@@ -15,36 +15,35 @@
             font-family: Arial, sans-serif;
         }
         
-        button {
+        #startButton {
             padding: 15px 40px;
             font-size: 18px;
             font-weight: bold;
             color: white;
-            background-color: #ff6b6b;
+            background-color: #007bff;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         
-        button:hover {
-            background-color: #ff5252;
+        #startButton:hover {
+            background-color: #0056b3;
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         
-        button.hidden {
-            display: none;
+        #startButton:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
-    <button id="startBtn">Start</button>
-
+    <button id="startButton">Start</button>
+    
     <script>
-        document.getElementById('startBtn').addEventListener('click', function() {
-            this.classList.add('hidden');
+        const button = document.getElementById('startButton');
+        button.addEventListener('click', function() {
+            button.style.display = 'none';
         });
     </script>
 </body>
