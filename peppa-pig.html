@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peppa Pig - Pink Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff69b4 0%, #ffb6e1 50%, #ffc0cb 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Comic Sans MS', 'Trebuchet MS', cursive, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        h1 {
+            color: #ff1493;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .peppa-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(255, 20, 147, 0.3);
+            animation: bounce 2s infinite;
+        }
+
+        p {
+            color: #ff1493;
+            font-size: 1.2em;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .hearts {
+            font-size: 2em;
+            margin: 20px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐷 Peppa Pig 🐷</h1>
+        <div class="hearts">❤️ 💗 ❤️</div>
+        <img src="https://upload.wikimedia.org/wikipedia/en/3/30/Peppa_Pig_character.png" 
+             alt="Peppa Pig" 
+             class="peppa-image">
+        <p>Oink! Oink! Welcome to Peppa's Pink World!</p>
+        <p>Jump in muddy puddles with Peppa Pig! 🌸</p>
+        <div class="hearts">❤️ 💗 ❤️</div>
+    </div>
+</body>
+</html>
