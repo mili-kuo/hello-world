@@ -41,6 +41,41 @@
             margin-bottom: 10px;
         }
 
+        .city-selector {
+            margin-bottom: 20px;
+        }
+
+        .city-selector label {
+            display: block;
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .city-selector select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .city-selector select:hover {
+            border-color: #667eea;
+        }
+
+        .city-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
         .location {
             color: #666;
             font-size: 18px;
@@ -183,17 +218,41 @@
             border-radius: 8px;
             margin: 15px 0;
         }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🌍 Weather Dashboard</h1>
-            <div class="location" id="location">Loading location...</div>
+            
+            <div class="city-selector">
+                <label for="cityDropdown">Select a City:</label>
+                <select id="cityDropdown" onchange="handleCityChange()">
+                    <option value="">-- Choose a City --</option>
+                    <option value="New York">New York</option>
+                    <option value="Los Angeles">Los Angeles</option>
+                    <option value="Chicago">Chicago</option>
+                    <option value="Houston">Houston</option>
+                    <option value="Miami">Miami</option>
+                </select>
+            </div>
+
+            <div class="location" id="location">Select a city from the dropdown</div>
             <div class="last-update" id="lastUpdate"></div>
         </div>
 
         <div id="errorContainer"></div>
+
+        <div id="loadingContainer" class="loading" style="display: none;">
+            Loading weather data...
+        </div>
 
         <div id="weatherData" style="display: none;">
             <div class="weather-main">
@@ -253,7 +312,7 @@
                 </div>
             </div>
 
-            <button class="refresh-btn" onclick="fetchWeather()">🔄 Refresh Weather</button>
+            <button class="refresh-btn" onclick="refreshWeather()">🔄 Refresh Weather</button>
         </div>
     </div>
 
@@ -276,6 +335,16 @@
             'Tornado': '🌪️'
         };
 
+        const usaCities = {
+            'New York': { lat: 40.7128, lon: -74.0060 },
+            'Los Angeles': { lat: 34.0522, lon: -118.2437 },
+            'Chicago': { lat: 41.8781, lon: -87.6298 },
+            'Houston': { lat: 29.7604, lon: -95.3698 },
+            'Miami': { lat: 25.7617, lon: -80.1918 }
+        };
+
+        let currentCity = '';
+
         function getWeatherIcon(description) {
             for (const [key, icon] of Object.entries(weatherIcons)) {
                 if (description.includes(key)) {
@@ -285,36 +354,48 @@
             return '🌤️';
         }
 
-        async function fetchWeather() {
-            try {
-                // Get user's coordinates
-                return new Promise((resolve, reject) => {
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(
-                            async (position) => {
-                                const { latitude, longitude } = position.coords;
-                                await getWeatherByCoords(latitude, longitude);
-                                resolve();
-                            },
-                            () => {
-                                // Fallback to London if geolocation fails
-                                showDemoWeather();
-                                resolve();
-                            }
-                        );
-                    } else {
-                        // Fallback to demo data
-                        showDemoWeather();
-                        resolve();
-                    }
-                });
-            } catch (error) {
-                console.error('Error fetching weather:', error);
-                showError('Failed to fetch weather data');
+        function handleCityChange() {
+            const cityDropdown = document.getElementById('cityDropdown');
+            const selectedCity = cityDropdown.value;
+
+            if (selectedCity) {
+                currentCity = selectedCity;
+                fetchWeatherForCity(selectedCity);
+            } else {
+                document.getElementById('weatherData').style.display = 'none';
+                document.getElementById('location').textContent = 'Select a city from the dropdown';
+                document.getElementById('errorContainer').innerHTML = '';
             }
         }
 
-        async function getWeatherByCoords(lat, lon) {
+        function showLoading() {
+            document.getElementById('loadingContainer').style.display = 'block';
+            document.getElementById('weatherData').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingContainer').style.display = 'none';
+        }
+
+        async function fetchWeatherForCity(cityName) {
+            try {
+                showLoading();
+                const coords = usaCities[cityName];
+                
+                if (!coords) {
+                    showError('City not found');
+                    return;
+                }
+
+                await getWeatherByCoords(coords.lat, coords.lon, cityName);
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                showError('Failed to fetch weather data');
+                hideLoading();
+            }
+        }
+
+        async function getWeatherByCoords(lat, lon, cityName) {
             try {
                 const apiKey = 'e8c1255529a881e82e5b631b9e3e6432'; // Free tier API key
                 const response = await fetch(
@@ -326,10 +407,12 @@
                 }
 
                 const data = await response.json();
+                hideLoading();
                 displayWeather(data);
             } catch (error) {
                 console.error('Error:', error);
-                showDemoWeather();
+                hideLoading();
+                showError('Unable to fetch weather. Please try again.');
             }
         }
 
@@ -348,29 +431,17 @@
             document.getElementById('errorContainer').innerHTML = '';
         }
 
-        function showDemoWeather() {
-            const demoData = {
-                name: 'San Francisco',
-                sys: { country: 'US' },
-                main: {
-                    temp: 22,
-                    feels_like: 21,
-                    humidity: 65,
-                    pressure: 1013
-                },
-                wind: { speed: 3.5 },
-                weather: [{ main: 'Partly Cloudy' }]
-            };
-
-            displayWeather(demoData);
-        }
-
         function showError(message) {
+            hideLoading();
             document.getElementById('errorContainer').innerHTML = `<div class="error">${message}</div>`;
+            document.getElementById('weatherData').style.display = 'none';
         }
 
-        // Load weather on page load
-        window.addEventListener('load', fetchWeather);
+        function refreshWeather() {
+            if (currentCity) {
+                fetchWeatherForCity(currentCity);
+            }
+        }
     </script>
 </body>
 </html>
